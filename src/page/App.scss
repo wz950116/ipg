@@ -1,0 +1,42 @@
+.App {
+  box-sizing: border-box;
+  padding: 0 1rem;
+  text-align: center;
+  position: relative;
+  min-height: 100vh;
+  font-size: 1rem;
+}
+.form_common {
+  position: fixed;
+  top: 2.5rem;
+  left: 1rem;
+  right: 1rem;
+  padding-top: 1rem !important;
+  background: #ffffff;
+  z-index: 999;
+  .ant-row {
+    .ant-col-12, .ant-col-24 {
+      margin-bottom: 1rem !important;
+    }
+    .ant-col-6.ant-form-item-label {
+      width: 25% !important;
+      display: inline-block !important;
+      line-height: 40px !important;
+    }
+    .ant-col-18.ant-form-item-control-wrapper {
+      width: 75% !important;
+      display: inline-block !important;
+    }
+  }
+  .ant-form-item {
+    margin-bottom: 0 !important;
+  }
+}
+.loading_more {
+  height: 1px;
+  margin: 1rem 0 4.5rem;
+}
+.loading_stop {
+  height: 1px;
+  margin-bottom: 2.5rem;
+}

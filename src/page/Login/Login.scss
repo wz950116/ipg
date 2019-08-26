@@ -1,0 +1,39 @@
+.search_wrap{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 15px;
+  .search_input{
+      width: 100%;
+      margin: 0 auto;
+      margin-top: 30px;
+      text-align: center;
+      .input{
+          margin-bottom: 15px;
+      }
+  }
+  .search_info{
+      margin-top: 30px;
+      p{
+          width: 100%;
+          text-align: left;
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 10px;
+          >span{
+              vertical-align: top;
+              display: inline-block;
+          }
+          .search_info_name{
+              width: 28%;
+          }
+          .search_info_num{
+              width: 72%;
+              white-space: pre-wrap;
+          }
+      }
+      .search_more{
+          color: #52adff;
+          font-size: 13px;
+      }
+  }
+} 

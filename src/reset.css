@@ -1,0 +1,239 @@
+@charset "utf-8";
+/* CSS Document */
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video,
+input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0; /*设置4个边框的样式*/
+  font-size: 100%;
+  outline-style: none; /*FF*/
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+html,
+body {
+  height: 100%;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+body {
+  color: #242424;
+  font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  background-color: #fff;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+}
+b,
+strong,
+i,
+em {
+  font-weight: normal;
+  font-style: normal;
+}
+fieldset,
+img {
+  border: 0;
+  vertical-align: middle;
+}
+a {
+  display: inline-block;
+}
+/** 重置表单元素 **/
+legend {
+  color: #000;
+} /* for ie6 */
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+} /* 使得表单元素在 ie 下能继承字体大小 */
+/* 注：optgroup 无法扶正 */
+
+input:-webkit-autofill {
+  background-color: #fff !important;
+  /*color: #000!important;*/
+  background-image: none;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+/* 水平垂直居中 */
+.center {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  margin: 0;
+  font: inherit; /*inherit 继承*/
+  color: inherit;
+  outline: 0;
+  -webkit-appearance: none; /* 方法2 */
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+/*css为clearfix，清除浮动*/
+.clearfix::after {
+  content: "";
+  height: 0;
+  line-height: 0;
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+.clearfix {
+  *zoom: 1; /*IE/7/6*/
+}
+
+/* 浮动 */
+.floatL {
+  float: left;
+}
+.floatR {
+  float: right;
+}
+/* 文字 */
+.text_left {
+  text-align: left;
+}
+.text_center {
+  text-align: center;
+}
+.text_right {
+  text-align: right;
+}
+
+.ellipsis {
+  display: block; /*内联对象需加*/
+  word-break: keep-all; /* 不换行 */
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+  text-overflow: ellipsis; /* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+}
+
+.relative {
+  position: relative;
+}
+input::-webkit-input-placeholder {
+  font-size: 13px;
+  line-height: 25px;
+}
+input:-moz-placeholder {
+  font-size: 13px;
+  line-height: 25px;
+}
+input::-moz-placeholder {
+  font-size: 13px;
+  line-height: 25px;
+}
+input:-ms-input-placeholder {
+  font-size: 13px;
+  line-height: 25px;
+}

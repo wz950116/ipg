@@ -1,0 +1,35 @@
+.Footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    padding-bottom: 20px;
+    font-size: 14px;
+    .contactus{
+        display: inline-block;
+        color: #1890ff;
+        margin-bottom: 5px;
+        .contact_type{
+            // position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: max-content;
+            min-width: 58px;
+            height: 20px;
+            line-height: 14px;
+            font-size: 13px;
+            a:visite{
+                color: #1890ff;
+            }
+            .contactus_liuy{
+                border-right: 1px solid #666;
+                padding-right: 5px;
+                margin-right: 6px;
+            }
+        }
+    }
+}

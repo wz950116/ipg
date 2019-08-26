@@ -1,0 +1,30 @@
+.history_record {
+  .history-record_form {
+    .ant-row {
+      .ant-col-12, .ant-col-24 {
+        margin-bottom: 1rem;
+        .am-list-item {
+          height: 36px;
+          min-height: unset;
+          padding: 4px 11px;
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          box-sizing: border-box;
+          .am-list-content, .am-list-arrow {
+            display: none;
+          }
+          .am-list-extra {
+            flex: 1;
+            padding: 0;
+            text-align: left;
+            font-size: 14px;
+            // color: rgb(191, 191, 191);
+          }
+        }
+      }
+    }
+  }
+  .am-list {
+    margin-top: 17rem;
+  }
+}

@@ -1,0 +1,23 @@
+.stock_search {
+  .am-list {
+    margin-top: 13rem;
+  }
+  .am-swipe {
+    .am-swipe-content {
+      .am-list-extra {
+        display: none !important;
+      }
+    }
+  }
+  .content {
+    line-height: 2rem;
+    font-size: 1rem;
+    text-align: left;
+    color: #000000;
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
