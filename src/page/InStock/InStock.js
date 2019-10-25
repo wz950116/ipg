@@ -19,9 +19,9 @@ class InStock extends Component {
       storageRoomList: [],
       StorageRoomId: sessionStorage.getItem("StorageRoomId"),
       SerialNumber: this.props.location.query ? this.props.location.query.sn : '',
-      HouseCode: "",
+      HouseCode: this.props.location.query ? this.props.location.query.newId : '',
       Model: "",
-      State: "",
+      State: undefined,
       ArrivalDate: "",
       Memo: ""
     };
@@ -50,13 +50,6 @@ class InStock extends Component {
       });
   }
 
-  // 输入框改变
-  inputHandle(e, key) {
-    this.setState({
-      [key]: e.target.value.trim()
-    });
-  }
-
   handleStorageRoomChange = StorageRoomId => {
     this.setState({ StorageRoomId });
   };
@@ -73,7 +66,6 @@ class InStock extends Component {
           ArrivalDate,
           Memo
         } = formData;
-
         axios
           .post("/stock/EntryHouse", {
             StorageRoomId,
@@ -86,6 +78,12 @@ class InStock extends Component {
           })
           .then(res => {
             if (res.Code === 0) {
+              // 成功后清空数据
+              this.props.form.resetFields();
+              this.setState({
+                State: undefined,
+                ArrivalDate: ""
+              })
               message.success(res.Msg);
             } else {
               message.error(res.Msg);
@@ -106,7 +104,7 @@ class InStock extends Component {
   onScan = key => {
     if (window.plus) {
       window.openBarcodeCustom(() => {
-        this.setState({
+        this.props.form.setFieldsValue({
           [key]: sessionStorage.getItem("scanData")
         });
       });
@@ -173,13 +171,12 @@ class InStock extends Component {
           <Form.Item>
             {getFieldDecorator("SerialNumber", {
               initialValue: state.SerialNumber,
-              rules: [{ required: true, message: "请输入序列号" }]
+              rules: [{ required: true, message: "请输入序列号" }],
             })(
               <Input
                 addonAfter={SerialNumberAfter}
                 type="text"
                 placeholder="序列号"
-                onChange={e => this.inputHandle(e, "SerialNumber")}
               />
             )}
           </Form.Item>
@@ -192,7 +189,6 @@ class InStock extends Component {
                 addonAfter={HouseCodeAfter}
                 type="text"
                 placeholder="库位"
-                onChange={e => this.inputHandle(e, "HouseCode")}
               />
             )}
           </Form.Item>
@@ -205,7 +201,6 @@ class InStock extends Component {
                 addonAfter={ModelAfter}
                 type="text"
                 placeholder="型号"
-                onChange={e => this.inputHandle(e, "Model")}
               />
             )}
           </Form.Item>
@@ -214,7 +209,7 @@ class InStock extends Component {
               initialValue: state.State,
               rules: [{ required: true, message: "请选择检验状态" }]
             })(
-              <Select placeholder="检验状态" onChange={this.handleStateChange}>
+              <Select allowClear placeholder="检验状态" onChange={this.handleStateChange}>
                 <Option value="1">已检</Option>
                 <Option value="2">待检</Option>
                 <Option value="3">不良</Option>
@@ -242,7 +237,6 @@ class InStock extends Component {
               <TextArea
                 placeholder="备注"
                 style={{ resize: "none" }}
-                onChange={e => this.inputHandle(e, "Memo")}
               />
             )}
           </Form.Item>

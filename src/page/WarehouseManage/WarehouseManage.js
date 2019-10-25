@@ -225,6 +225,7 @@ class WarehouseManage extends Component {
           <Row gutter={24}>
             <Col span={12}>
               <Select
+                allowClear
                 defaultValue={state.storageRoomId}
                 placeholder="库房"
                 onChange={this.handleRoomChange}
@@ -248,6 +249,7 @@ class WarehouseManage extends Component {
             </Col>
             <Col span={12}>
               <Select
+                allowClear
                 defaultValue={state.isNull}
                 placeholder="是否为空库位"
                 onChange={this.handleStatusChange}
@@ -302,7 +304,6 @@ class WarehouseManage extends Component {
                   onClose={() => console.log('global close')}
                 >
                   <List.Item
-                    extra="More"
                     arrow="horizontal"
                     onClick={e => this.showChoose(item)}
                   >

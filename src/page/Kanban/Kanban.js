@@ -20,7 +20,7 @@ class Kanban extends Component {
     axios
       .get("/stock/GetStorageRoomDetail", {
         params: {
-          storageRoomId: sessionStorage.getItem('StorageRoomId')
+          storageRoomId: this.props.location.query && this.props.location.query.NewStorageRoomId ? this.props.location.query.NewStorageRoomId : sessionStorage.getItem('StorageRoomId')
         }
       })
       .then(res => {
@@ -62,8 +62,8 @@ class Kanban extends Component {
                       {
                         item.newData[i].map((m, index) => {
                           return (
-                            <Col span={3} className='warehouse' key={index} style={{background: m.Quantity > 0 ? 'rgb(0, 204, 255)' : 'ffffff'}}>
-                              <Link to={{pathname: '/stockSearch', query: {newId: m.HouseCode}}} style={{display: 'inline-block', width: '100%', height: '100%'}}>
+                            <Col span={2} className='warehouse' key={index} style={{background: m.Quantity > 0 ? 'rgb(0, 204, 255)' : 'ffffff'}}>
+                              <Link to={{pathname: this.props.location.query ? '/transferWarehouse' : (m.Quantity > 0 ? '/stockSearch' : '/inStock'), query: {newId: m.HouseCode, ...this.props.location.query}}} style={{display: 'inline-block', width: '100%', height: '100%'}}>
                                 {m.Quantity}
                               </Link>
                             </Col>

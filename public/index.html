@@ -41,6 +41,7 @@
     
     // 打开自定义扫描界面 
     function openBarcodeCustom(callback) {
+      sessionStorage.setItem('scanRefresh', '0')
       createWithoutTitle('scan.html', {
         titleNView: {
           type: 'float',
@@ -55,6 +56,7 @@
     // 扫描成功后回调
     function scaned(t, r, f){
       sessionStorage.setItem('scanData', r)
+      sessionStorage.setItem('scanRefresh', '1')
     }
 
     (function(doc, win) {

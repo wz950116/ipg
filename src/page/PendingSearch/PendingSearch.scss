@@ -1,5 +1,11 @@
 .pending_search {
   .am-list {
-    margin-top: 10rem;
+    margin-top: 13rem;
+  }
+  .content {
+    .remark {
+      width: 100%;
+      white-space: pre-wrap;
+    }
   }
 }

@@ -112,7 +112,7 @@ class OutStock extends Component {
             <Col span={18}>
               <Input
                 addonAfter={SerialNumberAfter}
-                defaultValue={state.SerialNumber}
+                value={state.SerialNumber}
                 type="text"
                 placeholder="序列号"
                 onChange={e => this.GetMoreByHS(e, "SerialNumber")}
@@ -129,7 +129,7 @@ class OutStock extends Component {
             <Col span={24} className="text_show">{state.UpdateDate}</Col>
             <Col span={24}>
               <TextArea
-                defaultValue={state.Memo}
+                value={state.Memo}
                 placeholder="备注"
                 style={{ resize: "none" }}
                 onChange={e => this.inputHandle(e, "Memo")}

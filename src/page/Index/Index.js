@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { message, Row, Col } from "antd";
+import { message, Row, Col, Button } from "antd";
 import axios from "axios";
 import "./Index.scss";
 import imgUrl from '../../images/roomStorageBg.jpg';
+
+import { Modal } from 'antd-mobile';
+
+const alert = Modal.alert;
 
 class Login extends Component {
   constructor(props) {
@@ -15,6 +19,8 @@ class Login extends Component {
   // 初始化
   componentDidMount() {
     this.requestData()
+    sessionStorage.removeItem('StorageRoomId')
+    sessionStorage.removeItem('StorageRoomName')
   }
   // 发起数据请求
   requestData() {
@@ -36,7 +42,20 @@ class Login extends Component {
   // 点击库房
   chooseStorageRoom(query) {
     sessionStorage.setItem('StorageRoomId', query.StorageRoomId)
+    sessionStorage.setItem('StorageRoomName', query.Name)
     this.props.history.push('/kanban')
+  }
+  // 退出登录
+  logout = () => {
+    alert('提示', <div>确认登出？</div>, [
+      { text: '取消', onPress: () => { } },
+      {
+        text: '确定', onPress: () => {
+          sessionStorage.clear()
+          this.props.history.push('/login')
+        }
+      }
+    ])
   }
 
   render() {
@@ -62,6 +81,13 @@ class Login extends Component {
             )
           })
         }
+        <Button
+          type="primary"
+          onClick={this.logout}
+          style={{ width: "80%", position: 'fixed', bottom: '3rem' }}
+        >
+          退出
+        </Button>
       </Row>
     );
   }

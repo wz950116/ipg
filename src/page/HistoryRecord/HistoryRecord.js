@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { message, Form, Row, Col, Input, Select, Button } from "antd";
+import { message, Form, Row, Col, Input, Select, Button, Icon } from "antd";
 import axios from "axios";
 import "./HistoryRecord.scss";
 
@@ -16,11 +16,10 @@ class HistoryRecord extends Component {
     super(props);
     this.state = {
       storageRoomId: sessionStorage.getItem('StorageRoomId'),
-      state: "",
       houseCode: "",
       serialNumber: "",
       model: "",
-      type: "",
+      type: undefined,
       beginTime: "",
       endTime: "",
       page: 1,
@@ -55,19 +54,19 @@ class HistoryRecord extends Component {
     this.setState({
       page: 1
     }, () => {
-      const { storageRoomId, state, houseCode, model, serialNumber, type, beginTime, endTime, page } = this.state
+      const { storageRoomId, houseCode, model, serialNumber, type, beginTime, endTime, page } = this.state
       axios
         .get("/stock/GetRecords", {
           params: {
             storageRoomId,
-            state,
             houseCode,
             model,
             serialNumber,
-            type,
+            type: type ? type : "",
             beginTime: DateFormatter(beginTime),
             endTime: DateFormatter(endTime),
-            page
+            page,
+            state: ""
           }
         })
         .then(res => {
@@ -117,19 +116,19 @@ class HistoryRecord extends Component {
       page: this.state.page + 1,
       loadingComplete: false
     }, () => {
-      const { storageRoomId, state, houseCode, model, serialNumber, type, beginTime, endTime, page, listData } = this.state
+      const { storageRoomId, houseCode, model, serialNumber, type, beginTime, endTime, page, listData } = this.state
       axios
-        .get("/user/GetUsers", {
+        .get("/stock/GetRecords", {
           params: {
             storageRoomId,
-            state,
             houseCode,
             model,
             serialNumber,
-            type,
+            type: type ? type : "",
             beginTime: DateFormatter(beginTime),
             endTime: DateFormatter(endTime),
-            page
+            page,
+            state: ""
           }
         })
         .then(res => {
@@ -167,10 +166,6 @@ class HistoryRecord extends Component {
     this.setState({ storageRoomId })
   };
 
-  handleStatusChange = state => {
-    this.setState({ state })
-  };
-
   handleInOutTypeChange = type => {
     this.setState({ type })
   };
@@ -185,16 +180,15 @@ class HistoryRecord extends Component {
 
   // 导出excel
   handleExport = () => {
-    const { storageRoomId, state, houseCode, model, serialNumber, type, beginTime, endTime } = this.state
+    const { storageRoomId, houseCode, model, serialNumber, type, beginTime, endTime } = this.state
     axios
       .get("/stock/ExportRecords", {
         params: {
           storageRoomId,
-          state,
           houseCode,
           model,
           serialNumber,
-          type,
+          type: type ? type : "",
           beginTime: DateFormatter(beginTime),
           endTime: DateFormatter(endTime)
         }
@@ -212,24 +206,63 @@ class HistoryRecord extends Component {
       })
   };
 
+  // 扫码
+  onScan = key => {
+    if (window.plus) {
+      window.openBarcodeCustom(() => {
+        this.setState({
+          [key]: sessionStorage.getItem("scanData")
+        });
+      });
+    } else {
+      message.error("当前设备不支持扫码");
+      this.setState({
+        [key]: sessionStorage.getItem("scanData") || '9999'
+      });
+    }
+  };
+
   render() {
     const { state } = this;
+    
+    const SerialNumberAfter = (
+      <Icon
+        type="scan"
+        onClick={this.onScan.bind(this, "serialNumber")}
+      />
+    )
+    const HouseCodeAfter = (
+      <Icon
+        type="scan"
+        onClick={this.onScan.bind(this, "houseCode")}
+      />
+    )
+    const ModelAfter = (
+      <Icon
+        type="scan"
+        onClick={this.onScan.bind(this, "Model")}
+      />
+    )
     return (
       <div className='history_record'>
         <Form className="form_common history-record_form">
           <Row gutter={24}>
             <Col span={12}>
               <Input
+                addonAfter={ModelAfter}
+                value={state.model}
                 type="text"
                 placeholder="型号"
-                onBlur={e => this.inputHandle(e, "model")}
+                onChange={e => this.inputHandle(e, "model")}
               />
             </Col>
             <Col span={12}>
               <Input
+                addonAfter={SerialNumberAfter}
+                value={state.serialNumber}
                 type="text"
                 placeholder="序列号"
-                onBlur={e => this.inputHandle(e, "serialNumber")}
+                onChange={e => this.inputHandle(e, "serialNumber")}
               />
             </Col>
             <Col span={12}>
@@ -256,7 +289,8 @@ class HistoryRecord extends Component {
             </Col>
             <Col span={12}>
               <Select
-                defaultValue={state.storageRoomId}
+                allowClear
+                value={state.storageRoomId}
                 placeholder="库房"
                 onChange={this.handleRoomChange}
               >
@@ -271,23 +305,17 @@ class HistoryRecord extends Component {
             </Col>
             <Col span={12}>
               <Input
+                addonAfter={HouseCodeAfter}
+                value={state.houseCode}
                 type="text"
                 placeholder="库位"
-                onBlur={e => this.inputHandle(e, "houseCode")}
+                onChange={e => this.inputHandle(e, "houseCode")}
               />
             </Col>
             <Col span={12}>
               <Select
-                placeholder="检验状态"
-                onChange={this.handleStatusChange}
-              >
-                <Option value="1">已检</Option>
-                <Option value="2">待检</Option>
-                <Option value="3">不良</Option>
-              </Select>
-            </Col>
-            <Col span={12}>
-              <Select
+                value={state.type}
+                allowClear
                 placeholder="出入类型"
                 onChange={this.handleInOutTypeChange}
               >
@@ -324,13 +352,13 @@ class HistoryRecord extends Component {
               return (
                 <List.Item
                   key={index}
-                  style={{ backgroundColor: item.Type === 1 ? 'LightGreen' : item.Type === 2 ? 'Khaki' : item.Type === 3 ? 'MediumOrchid' : 'Blue' }}
+                  style={{ backgroundColor: item.Type === 1 ? 'LightGreen' : item.Type === 2 ? 'Khaki' : item.Type === 3 ? 'MediumOrchid' : 'LightSkyBlue' }}
                 >
                   <div className='content'>
                     <div className="address">{item.Title}</div>
                     <div className="code">SN：{item.SerialNumber}&nbsp;&nbsp;MODEL：{item.Model}</div>
-                    <div className="status">{item.State === 1 ? '已检' : item.State === 2 ? '待检' : '不良'}</div>
                     <div className="time">操作时间：{item.OperateDate}</div>
+                    <div className="remark">备注：{item.Memo}</div>
                   </div>
                 </List.Item>
               )

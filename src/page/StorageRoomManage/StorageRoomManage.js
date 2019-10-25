@@ -121,6 +121,7 @@ class StorageRoomManage extends Component {
           <Row gutter={24}>
             <Col span={24}>
               <Select
+                allowClear
                 defaultValue={state.storageRoomId}
                 placeholder="库房"
                 onChange={this.handleRoomIdChange}
@@ -159,7 +160,6 @@ class StorageRoomManage extends Component {
                   ]}
                 >
                   <List.Item
-                    extra="More"
                     arrow="horizontal"
                     onClick={e => this.showChoose(item)}
                   >

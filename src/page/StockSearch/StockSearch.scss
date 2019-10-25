@@ -1,6 +1,6 @@
 .stock_search {
   .am-list {
-    margin-top: 13rem;
+    margin-top: 16rem;
   }
   .am-swipe {
     .am-swipe-content {
@@ -17,7 +17,11 @@
     div {
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      white-space: pre-wrap;
+    }
+    .remark {
+      width: 100%;
+      white-space: pre-wrap;
     }
   }
 }

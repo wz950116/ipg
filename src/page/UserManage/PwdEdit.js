@@ -87,7 +87,7 @@ class PwdEdit extends Component {
                 rules: [{ required: true, message: '请输入用户名' }],
               })(
                 <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<Icon type="user" style={{ color: 'rgba(0, 0, 0, .25)' }} />}
                   placeholder="登录名"
                 />,
               )}
@@ -97,7 +97,7 @@ class PwdEdit extends Component {
                 rules: [{ required: false, message: '' }],
               })(
                 <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0, 0, 0, .25)' }} />}
                   type="password"
                   placeholder="旧密码"
                 />,
@@ -112,7 +112,7 @@ class PwdEdit extends Component {
                 }],
               })(
                 <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0, 0, 0, .25)' }} />}
                   type="password"
                   placeholder="新密码"
                 />,
@@ -127,7 +127,7 @@ class PwdEdit extends Component {
                 }],
               })(
                 <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0, 0, 0, .25)' }} />}
                   type="password"
                   placeholder="确认新密码"
                   onBlur={this.handleConfirmBlur}

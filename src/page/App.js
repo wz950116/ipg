@@ -9,10 +9,11 @@ class App extends Component {
   render() {
     const pathname = this.props.location.pathname;
     const showBar = ["/login", "/index"].includes(pathname)
+    const StorageRoomName = this.props.location.query && this.props.location.query.StorageRoomName ? this.props.location.query.StorageRoomName : sessionStorage.getItem('StorageRoomName')
 
     return (
       <div className="App">
-        <Header />
+        <Header roomName={StorageRoomName} />
         {this.props.children}
         {showBar ? <Footer /> : <ButtomBar />}
       </div>

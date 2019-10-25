@@ -17,7 +17,7 @@ class ButtomBar extends Component {
           name: '库存查询'
         }, {
           url: '/pendingSearch',
-          name: '待检查询'
+          name: '待检区查询'
         }, {
           url: '/historyRecord',
           name: '历史记录'
@@ -40,6 +40,9 @@ class ButtomBar extends Component {
       }, {
         name: '报表',
         list: [{
+          url: '/index',
+          name: '电子看板'
+        }, {
           url: '/operationalTrends',
           name: '操作趋势'
         }],

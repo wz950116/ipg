@@ -8,8 +8,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: "admin",
-      pwd: "123456"
+      username: "",
+      pwd: ""
     }
 
     this.inputHandle = this.inputHandle.bind(this)

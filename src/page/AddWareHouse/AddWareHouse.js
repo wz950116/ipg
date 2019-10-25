@@ -11,7 +11,7 @@ class AddWareHouse extends Component {
     super(props);
     this.state = {
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
-      ShelveId: this.props.location.query ? this.props.location.query.StorehouseId : "",
+      ShelveId: this.props.location.query ? this.props.location.query.StorehouseId : undefined,
       Code: this.props.location.query ? this.props.location.query.House : "",
       type: this.props.location.query ? this.props.location.query.type : "",
       storageRoomList: [],

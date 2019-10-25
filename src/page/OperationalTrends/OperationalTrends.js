@@ -92,7 +92,7 @@ class OperationalTrends extends Component {
           magicType: {
             show: true,
             type: ['line', 'bar']
-          },
+          }
         }
       },
       legend: {
@@ -111,17 +111,17 @@ class OperationalTrends extends Component {
       }],
       series: [{
         name: '入库',
-        type: 'line',
+        type: 'bar',
         smooth: true,
         data: listData.inHouse
       }, {
         name: '出库',
-        type: 'line',
+        type: 'bar',
         smooth: true,
         data: listData.outHouse
       }, {
         name: '检验',
-        type: 'line',
+        type: 'bar',
         smooth: true,
         data: listData.check
       }]
@@ -144,6 +144,7 @@ class OperationalTrends extends Component {
           <Row gutter={24}>
             <Col span={24}>
               <Select
+                allowClear
                 defaultValue={state.storageRoomId}
                 placeholder="库房"
                 onChange={this.handleRoomIdChange}

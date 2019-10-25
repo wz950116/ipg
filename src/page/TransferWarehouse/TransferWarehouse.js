@@ -1,23 +1,53 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Form, Row, Col, Input, Button, message, Icon } from "antd";
+import { Form, Row, Col, Input, Select, Button, message, Icon } from "antd";
 import axios from "axios";
 import "./TransferWarehouse.scss";
 
+const { Option } = Select;
 const { TextArea } = Input;
 
 class TransferWarehouse extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      storageRoomList: [],
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
+      NewStorageRoomId: this.props.location.query && this.props.location.query.NewStorageRoomId ? this.props.location.query.NewStorageRoomId : sessionStorage.getItem('StorageRoomId'),
       SerialNumber: this.props.location.query && this.props.location.query.sn,
       Memo: "",
-      HouseCode: "",
+      HouseCode: this.props.location.query && this.props.location.query.newId,
       Model: "",
       State: "",
       UpdateDate: ""
     };
+  }
+
+  componentDidMount() {
+    // 库房数据
+    this.requestStorageRoomList();
+    // 初始化有序列号则带出相关信息
+    if (this.state.SerialNumber) {
+      this.onSearch()
+    }
+  }
+
+  // 请求对应库房数据
+  requestStorageRoomList() {
+    axios
+      .get("/stock/GetStorageRooms")
+      .then(res => {
+        if (res.Code === 0) {
+          this.setState({
+            storageRoomList: res.Data
+          });
+        } else {
+          message.error(res.Msg);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   // 输入框改变
@@ -27,8 +57,16 @@ class TransferWarehouse extends Component {
     });
   };
 
+  handleStorageRoomChange = NewStorageRoomId => {
+    this.setState({ NewStorageRoomId });
+  };
+
   onSearch() {
     const { StorageRoomId, SerialNumber } = this.state
+    if (!SerialNumber) {
+      message.error('请输入序列号');
+      return;
+    }
     axios
       .get("/stock/GetMoreByHS", {
         params: {
@@ -39,12 +77,16 @@ class TransferWarehouse extends Component {
       .then(res => {
         if (res.Code === 0) {
           this.setState({
-            HouseCode: res.Data.HouseCode,
             Model: res.Data.Model,
             State: res.Data.State,
             UpdateDate: res.Data.UpdateDate
           })
         } else {
+          this.setState({
+            Model: "",
+            State: "",
+            UpdateDate: ""
+          })
           message.error(res.Msg);
         }
       })
@@ -53,8 +95,16 @@ class TransferWarehouse extends Component {
       });
   };
 
+  onCheck() {
+    const { NewStorageRoomId, SerialNumber } = this.state
+    if (NewStorageRoomId) {
+      const StorageRoomName = this.state.storageRoomList.filter(room => room.StorageRoomId === NewStorageRoomId)[0].Name
+      this.props.history.push({pathname: '/kanban', query: {NewStorageRoomId, StorageRoomName, sn: SerialNumber}})
+    }
+  };
+
   onConfirm = () => {
-    const { StorageRoomId, SerialNumber, HouseCode, Memo } = this.state
+    const { StorageRoomId, NewStorageRoomId, SerialNumber, HouseCode, Memo } = this.state
     if (!SerialNumber) {
       message.error('请输入序列号');
       return;
@@ -65,6 +115,7 @@ class TransferWarehouse extends Component {
     axios
       .post("/stock/UpperShelf", {
         StorageRoomId,
+        NewStorageRoomId,
         SerialNumber,
         HouseCode,
         Memo
@@ -112,10 +163,10 @@ class TransferWarehouse extends Component {
       <div>
         <Form className="form_common">
           <Row gutter={24}>
-            <Col span={14}>
+            <Col span={18}>
               <Input
                 addonAfter={SerialNumberAfter}
-                defaultValue={state.SerialNumber}
+                value={state.SerialNumber}
                 type="text"
                 placeholder="序列号"
                 onChange={e => this.inputHandle(e, "SerialNumber")}
@@ -126,26 +177,45 @@ class TransferWarehouse extends Component {
                 查询
               </Button>
             </Col>
-            <Col span={14}>
+            <Col span={24} className='text_show' style={{display: state.Model ? 'block' : 'none'}}>{state.Model}</Col>
+            <Col span={24} className='text_show' style={{display: state.State ? 'block' : 'none'}}>{state.State}</Col>
+            <Col span={24} className='text_show' style={{display: state.UpdateDate ? 'block' : 'none'}}>{state.UpdateDate}</Col>
+            <Col span={8}>
+              <Select
+                value={state.NewStorageRoomId}
+                placeholder="新库房"
+                onChange={this.handleStorageRoomChange}
+                allowClear
+              >
+                {state.storageRoomList.map(option => {
+                  return (
+                    <Option
+                      key={option.StorageRoomId}
+                      value={option.StorageRoomId}
+                    >
+                      {option.Name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Col>
+            <Col span={10}>
               <Input
                 addonAfter={HouseCodeAfter}
-                defaultValue={state.HouseCode}
+                value={state.HouseCode}
                 type="text"
                 placeholder="新库位"
                 onChange={e => this.inputHandle(e, "HouseCode")}
               />
             </Col>
             <Col span={6}>
-              <Button type="primary" onClick={this.onSearch.bind(this)}>
-                查询
+              <Button type="primary" onClick={this.onCheck.bind(this)}>
+                查找
               </Button>
             </Col>
-            <Col span={24} className='text_show'>{state.Model}</Col>
-            <Col span={24} className='text_show'>{state.State}</Col>
-            <Col span={24} className='text_show'>{state.UpdateDate}</Col>
             <Col span={24}>
               <TextArea
-                defaultValue={state.Memo}
+                value={state.Memo}
                 placeholder="备注"
                 style={{ resize: "none" }}
                 onChange={e => this.inputHandle(e, "Memo")}

@@ -68,7 +68,10 @@ class ProductTest extends Component {
       .then(res => {
         if (res.Code === 0) {
           message.success(res.Msg);
-          this.props.history.push('/pendingSearch')
+          this.setState({
+            SerialNumber: '',
+            Memo: ''
+          });
         } else {
           message.error(res.Msg);
         }
@@ -77,6 +80,32 @@ class ProductTest extends Component {
         console.log(error);
       });
   };
+
+  // 转良品不良品
+  onGoodOrBad = (state) => {
+    const { StorageRoomId, SerialNumber, Memo } = this.state
+    if (!SerialNumber) {
+      message.error('请输入序列号');
+      return;
+    }
+    axios
+      .post("stock/UpdateProductStateBySN", {
+        StorageRoomId,
+        SerialNumber,
+        state,
+        Memo
+      })
+      .then(res => {
+        if (res.Code === 0) {
+          message.success(res.Msg);
+        } else {
+          message.error(res.Msg);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   // 扫码
   onScan = key => {
@@ -106,7 +135,7 @@ class ProductTest extends Component {
             <Col span={18}>
               <Input
                 addonAfter={SerialNumberAfter}
-                defaultValue={state.SerialNumber}
+                value={state.SerialNumber}
                 type="text"
                 placeholder="序列号"
                 onChange={e => this.inputHandle(e, "SerialNumber")}
@@ -123,7 +152,7 @@ class ProductTest extends Component {
             <Col span={24} className="text_show">{state.UpdateDate}</Col>
             <Col span={24}>
               <TextArea
-                defaultValue={state.Memo}
+                value={state.Memo}
                 placeholder="备注"
                 style={{ resize: "none" }}
                 onChange={e => this.inputHandle(e, "Memo")}
@@ -136,6 +165,24 @@ class ProductTest extends Component {
                 style={{ width: "100%" }}
               >
                 送入待检区
+              </Button>
+            </Col>
+            <Col span={24}>
+              <Button
+                type="primary"
+                onClick={() => this.onGoodOrBad('1')}
+                style={{ width: "100%" }}
+              >
+                产品检验：良品
+              </Button>
+            </Col>
+            <Col span={24}>
+              <Button
+                type="primary"
+                onClick={() => this.onGoodOrBad('3')}
+                style={{ width: "100%" }}
+              >
+                产品检验：不良
               </Button>
             </Col>
           </Row>

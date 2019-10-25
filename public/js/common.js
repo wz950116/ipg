@@ -85,7 +85,9 @@
       ws.backButtonAutoControl || (ws.backButtonAutoControl = 'close');
       openw = plus.webview.create(id, id, ws);
       openw.addEventListener('close', function () {
-        cb()
+        if (sessionStorage.getItem('scanRefresh') === '1') {
+          cb()
+        }
         openw = null;
       }, false);
       return openw;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter,  Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import logo from "../../images/logo.png";
 import { Icon } from "antd";
 import "./Header.scss";
@@ -7,18 +7,18 @@ import "./Header.scss";
 class Header extends Component {
   constructor(props) {
     super(props)
-    this.state={
+    this.state = {
       showAdd: ['/userManage', '/warehouseManage', '/storageRoomManage', '/paramMaintain'],
       goBackList: ['/stockSearch', '/inStock', '/outStock', '/productTest', '/transferWarehouse', '/addUser/add', '/addUser/update', '/addWareHouse/add', '/addWareHouse/update', '/addRoom/add', '/addRoom/update'],
       backList: [{
         path: "/kanban",
-        title: 'IPGB A库电子看板'
+        title: ""
       }, {
         path: '/stockSearch',
         title: '库存查询'
       }, {
         path: '/pendingSearch',
-        title: '待检查询'
+        title: '待检区查询'
       }, {
         path: '/historyRecord',
         title: '历史记录'
@@ -97,7 +97,7 @@ class Header extends Component {
               <Icon type="left" />
             </div>
             <span className="title">
-              {backList.filter(v => v.path === pathname)[0].title}
+              {backList.filter(v => v.path === pathname)[0].title ? backList.filter(v => v.path === pathname)[0].title : `IPGB ${this.props.roomName}电子看板`}
             </span>
             <Link to={{pathname: addUrl, query: {type: 'add'}}} style={{ display: showAdd.includes(pathname) ? "block" : "none" }} className="add">
               <Icon type="plus" />

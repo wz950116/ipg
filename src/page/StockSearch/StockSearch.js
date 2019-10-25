@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Form, Row, Col, Input, Select, Button, message } from "antd";
+import { Form, Row, Col, Input, Select, Button, message, Icon } from "antd";
 import axios from "axios";
+import MemoEdit from './MemoEdit';
 import "./StockSearch.scss";
 
 import { SwipeAction, List, Modal } from 'antd-mobile';
@@ -18,11 +19,14 @@ class StockSearch extends Component {
       listData: [],
       storageRoomList: [],
       storageRoomId: sessionStorage.getItem('StorageRoomId'),
-      state: "",
+      state: undefined,
       houseCode: this.props.location.query ? this.props.location.query.newId : "",
       serialNumber: "",
       model: "",
+      memo: "",
       page: 1,
+      dialogVisible: false,
+      currentRow: null,
       showMore: false, // 是否显示加载更多
       isEmpty: false, // 是否显示加载完毕无更多数据
       loadingComplete: true // 上一次加载更多是否已经完成
@@ -50,15 +54,16 @@ class StockSearch extends Component {
     this.setState({
       page: 1
     }, () => {
-      const { storageRoomId, state, houseCode, serialNumber, model, page } = this.state
+      const { storageRoomId, state, houseCode, serialNumber, model, memo, page } = this.state
       axios
         .get("/stock/GetProducts", {
           params: {
             storageRoomId,
-            state,
+            state: state ? state : "",
             houseCode,
             serialNumber,
             model,
+            memo,
             page
           }
         })
@@ -109,15 +114,16 @@ class StockSearch extends Component {
       page: this.state.page + 1,
       loadingComplete: false
     }, () => {
-      const { storageRoomId, state, houseCode, serialNumber, model, page, listData } = this.state
+      const { storageRoomId, state, houseCode, serialNumber, model, memo, page, listData } = this.state
       axios
         .get("/stock/GetProducts", {
           params: {
             storageRoomId,
-            state,
+            state: state ? state : "",
             houseCode,
             serialNumber,
             model,
+            memo,
             page
           }
         })
@@ -147,15 +153,16 @@ class StockSearch extends Component {
 
   // 导出excel
   handleExport = () => {
-    const { storageRoomId, state, houseCode, serialNumber, model } = this.state
+    const { storageRoomId, state, houseCode, serialNumber, model, memo } = this.state
     axios
       .get("/stock/ExportProducts", {
         params: {
           storageRoomId,
-          state,
+          state: state ? state : '',
           houseCode,
           serialNumber,
-          model
+          model,
+          memo
         }
       })
       .then(res => {
@@ -183,6 +190,13 @@ class StockSearch extends Component {
     this.setState({
       [key]: e.target.value.trim()
     });
+  };
+
+  onEdit = (item) => {
+    this.setState({
+      dialogVisible: true,
+      currentRow: item
+    })
   }
 
   onTest = (item) => {
@@ -199,6 +213,7 @@ class StockSearch extends Component {
 
   showChoose = (item) => {
     alert('提示', <div>请选择操作</div>, [
+      { text: '编辑备注', onPress: () => this.onEdit(item) },
       { text: '检验', onPress: () => this.onTest(item) },
       { text: '出库', onPress: () => this.onOutStock(item) },
       { text: '转库位（重新上架）', onPress: () => this.onTransfer(item) },
@@ -206,17 +221,65 @@ class StockSearch extends Component {
     ])
   };
 
-  
+  // 扫码
+  onScan = key => {
+    if (window.plus) {
+      window.openBarcodeCustom(() => {
+        this.setState({
+          [key]: sessionStorage.getItem("scanData")
+        });
+      });
+    } else {
+      message.error("当前设备不支持扫码");
+    }
+  };
+
+  changeVisible(refresh) {
+    this.setState({ 
+      dialogVisible: false
+    }, () => {
+      if (refresh) {
+        this.requestData()
+      }
+    })
+  };
 
   render() {
     const { state } = this;
+
+    const SerialNumberAfter = (
+      <Icon
+        type="scan"
+        onClick={this.onScan.bind(this, "serialNumber")}
+      />
+    )
+    const HouseCodeAfter = (
+      <Icon
+        type="scan"
+        onClick={this.onScan.bind(this, "houseCode")}
+      />
+    )
+    const ModelAfter = (
+      <Icon
+        type="scan"
+        onClick={this.onScan.bind(this, "model")}
+      />
+    )
     return (
       <div className='stock_search'>
+        {
+          state.dialogVisible ? 
+          <MemoEdit data={state.currentRow} changeVisible={this.changeVisible.bind(this)}></MemoEdit>
+          :
+          null
+        }
+        
         <Form className="form_common">
           <Row gutter={24}>
             <Col span={12}>
               <Select
-                defaultValue={state.storageRoomId}
+                allowClear
+                value={state.storageRoomId}
                 placeholder="库房"
                 onChange={this.handleRoomChange}
               >
@@ -231,6 +294,8 @@ class StockSearch extends Component {
             </Col>
             <Col span={12}>
               <Select
+                allowClear
+                value={state.state}
                 placeholder="检验状态"
                 onChange={this.handleStatusChange}
               >
@@ -241,7 +306,8 @@ class StockSearch extends Component {
             </Col>
             <Col span={12}>
               <Input
-                defaultValue={state.houseCode}
+                addonAfter={HouseCodeAfter}
+                value={state.houseCode}
                 type="text"
                 placeholder="库位"
                 onChange={e => this.inputHandle(e, "houseCode")}
@@ -249,7 +315,8 @@ class StockSearch extends Component {
             </Col>
             <Col span={12}>
               <Input
-                defaultValue={state.serialNumber}
+                addonAfter={SerialNumberAfter}
+                value={state.serialNumber}
                 type="text"
                 placeholder="序列号"
                 onChange={e => this.inputHandle(e, "serialNumber")}
@@ -257,7 +324,8 @@ class StockSearch extends Component {
             </Col>
             <Col span={12}>
               <Input
-                defaultValue={state.model}
+                addonAfter={ModelAfter}
+                value={state.model}
                 type="text"
                 placeholder="型号"
                 onChange={e => this.inputHandle(e, "model")}
@@ -271,6 +339,14 @@ class StockSearch extends Component {
               >
                 生成Excel
               </Button>
+            </Col>
+            <Col span={24}>
+              <Input
+                value={state.memo}
+                type="text"
+                placeholder="备注"
+                onChange={e => this.inputHandle(e, "memo")}
+              />
             </Col>
             <Col span={24}>
               <Button
@@ -294,6 +370,11 @@ class StockSearch extends Component {
                   autoClose
                   right={[
                     {
+                      text: '编辑备注',
+                      onPress: () => this.onEdit(item),
+                      style: { backgroundColor: 'CornflowerBlue', color: 'white' },
+                    },
+                    {
                       text: '检验',
                       onPress: () => this.onTest(item),
                       style: { backgroundColor: '#ddd', color: 'white' },
@@ -311,15 +392,14 @@ class StockSearch extends Component {
                   ]}
                 >
                   <List.Item
-                    extra="More"
                     arrow="horizontal"
                     onClick={() => this.showChoose(item)}
                   >
                     <div className='content'>
                       <div className="title">{item.Title}</div>
                       <div className="code">SN：{item.SerialNumber}&nbsp;&nbsp;MODEL：{item.Model}</div>
-                      <div className="status">{item.State === 1 ? '已检' : item.State === 2 ? '待检' : '不良'}</div>
-                      <div className="time">上次操作时间：{item.OperateDate}</div>
+                      <div className="time">{item.State === 1 ? '已检' : item.State === 2 ? '待检' : '不良'}&nbsp;&nbsp;上次操作时间：{item.OperateDate}</div>
+                      <div className="remark">{item.Memo}</div>
                     </div>
                   </List.Item>
                 </SwipeAction>

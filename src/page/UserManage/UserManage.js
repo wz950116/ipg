@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Form, Row, Col, Input, Select, message, Button } from "antd";
 import axios from "axios";
-import PwdEdit from './PwdEdit'
+import PwdEdit from './PwdEdit';
 import "./UserManage.scss";
 
 import { SwipeAction, List, Modal } from 'antd-mobile';
@@ -287,7 +287,6 @@ class UserManage extends Component {
                   ]}
                 >
                   <List.Item
-                    extra="More"
                     arrow="horizontal"
                     onClick={e => this.showChoose(item)}
                   >

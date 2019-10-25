@@ -13,7 +13,7 @@ class AddUser extends Component {
       name: "",
       mobile: "",
       username: "",
-      roles: [],
+      roles: undefined,
       type: this.props.location.query ? this.props.location.query.type : "",
       roleList: []
     };
