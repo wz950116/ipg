@@ -10,6 +10,7 @@ class AddWareHouse extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
       ShelveId: this.props.location.query ? this.props.location.query.StorehouseId : undefined,
       Code: this.props.location.query ? this.props.location.query.House : "",
@@ -92,6 +93,7 @@ class AddWareHouse extends Component {
     this.props.form.validateFields((err, formData) => {
       if (!err) {
         const { ShelveId, Code } = formData
+        this.setState({ loading: true });
         if (type === "add") {
           axios
             .post("/stock/AddStorehouse", {
@@ -99,6 +101,7 @@ class AddWareHouse extends Component {
               Code
             })
             .then(res => {
+              this.setState({ loading: false });
               if (res.Code === 0) {
                 message.success(res.Msg);
                 this.props.history.push('/warehouseManage')
@@ -107,6 +110,7 @@ class AddWareHouse extends Component {
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log(error);
             });
         } else if (type === "update") {
@@ -116,6 +120,7 @@ class AddWareHouse extends Component {
               Code
             })
             .then(res => {
+              this.setState({ loading: false });
               if (res.Code === 0) {
                 this.props.history.push('/warehouseManage')
                 message.success(res.Msg);
@@ -124,6 +129,7 @@ class AddWareHouse extends Component {
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log(error);
             });
         }
@@ -148,7 +154,7 @@ class AddWareHouse extends Component {
   };
 
   render() {
-    const { type, storageRoomList, shelveList, StorageRoomId, ShelveId, Code } = this.state;
+    const { type, storageRoomList, shelveList, StorageRoomId, ShelveId, Code, loading } = this.state;
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 0 },
@@ -226,6 +232,7 @@ class AddWareHouse extends Component {
           <Form.Item {...formTailLayout}>
             <Button
               type="primary"
+              loading={loading}
               onClick={this.check}
               style={{ width: "100%" }}
             >

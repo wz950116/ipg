@@ -10,6 +10,7 @@ class AddUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       name: "",
       mobile: "",
       username: "",
@@ -86,10 +87,12 @@ class AddUser extends Component {
       if (!err) {
         const params = Object.assign({}, formData)
         params.roles = params.roles.join()
+        this.setState({ loading: true });
         if (type === "add") {
           axios
             .post("/user/CreateUser", params)
             .then(res => {
+              this.setState({ loading: false });
               if (res.Code === 0) {
                 message.success(res.Msg);
                 this.props.history.push("/userManage")
@@ -98,20 +101,24 @@ class AddUser extends Component {
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log(error);
             });
         } else if (type === "update") {
           axios
             .post("/user/UpdateUser", params)
             .then(res => {
+              this.setState({ loading: false });
               if (res.Code === 0) {
                 message.success(res.Msg);
                 this.props.history.push("/userManage")
               } else {
                 message.error(res.Msg);
+                this.setState({ loading: false });
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log(error);
             });
         }
@@ -187,7 +194,7 @@ class AddUser extends Component {
             )}
           </Form.Item>
           <Form.Item {...formTailLayout}>
-            <Button type="primary" onClick={this.check} style={{width: '100%'}}>
+            <Button type="primary" loading={state.loading} onClick={this.check} style={{width: '100%'}}>
               {state.type === "add" ? "新建" : "编辑"}
             </Button>
           </Form.Item>

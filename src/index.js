@@ -27,6 +27,12 @@ import AddRoom from "./page/AddRoom/AddRoom";
 import OperationalTrends from "./page/OperationalTrends/OperationalTrends";
 import * as serviceWorker from "./serviceWorker";
 import AuthRouter from "./AuthorizedRoute";
+import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import { LocaleProvider } from 'antd'
+
+/** debug */
+import VConsole from 'vconsole'
+new VConsole()
 
 // let equip = ''
 // if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
@@ -96,34 +102,36 @@ axios.interceptors.response.use(
 );
 
 ReactDOM.render(
-  <HashRouter>
-    <Switch>
-      <Route exact path="/" render={() => 
-        <Redirect to='/index'></Redirect>}>
-      </Route>
-      <Route path="/login">
-        <App>
-          <Route path="/login" component={Login} />
-        </App>
-      </Route>
-      <AuthRouter path="/index" component={Index} />
-      <AuthRouter path="/kanban" component={Kanban} />
-      <AuthRouter path="/stockSearch" component={StockSearch} />
-      <AuthRouter path="/pendingSearch" component={PendingSearch} />
-      <AuthRouter path="/historyRecord" component={HistoryRecord} />
-      <AuthRouter path="/inStock" component={InStock} />
-      <AuthRouter path="/outStock" component={OutStock} />
-      <AuthRouter path="/productTest" component={ProductTest} />
-      <AuthRouter path="/transferWarehouse" component={TransferWarehouse} />
-      <AuthRouter path="/userManage" component={UserManage} />
-      <AuthRouter path="/warehouseManage" component={WarehouseManage} />
-      <AuthRouter path="/storageRoomManage" component={StorageRoomManage} />
-      <AuthRouter path="/addUser" component={AddUser} />
-      <AuthRouter path="/addWareHouse/:type" component={AddWareHouse} />
-      <AuthRouter path="/addRoom/:type" component={AddRoom} />
-      <AuthRouter path="/operationalTrends" component={OperationalTrends} />
-    </Switch>
-  </HashRouter>,
+  <LocaleProvider locale={zh_CN}>
+    <HashRouter>
+      <Switch>
+        <Route exact path="/" render={() => 
+          <Redirect to='/index'></Redirect>}>
+        </Route>
+        <Route path="/login">
+          <App>
+            <Route path="/login" component={Login} />
+          </App>
+        </Route>
+        <AuthRouter path="/index" component={Index} />
+        <AuthRouter path="/kanban" component={Kanban} />
+        <AuthRouter path="/stockSearch" component={StockSearch} />
+        <AuthRouter path="/pendingSearch" component={PendingSearch} />
+        <AuthRouter path="/historyRecord" component={HistoryRecord} />
+        <AuthRouter path="/inStock" component={InStock} />
+        <AuthRouter path="/outStock" component={OutStock} />
+        <AuthRouter path="/productTest" component={ProductTest} />
+        <AuthRouter path="/transferWarehouse" component={TransferWarehouse} />
+        <AuthRouter path="/userManage" component={UserManage} />
+        <AuthRouter path="/warehouseManage" component={WarehouseManage} />
+        <AuthRouter path="/storageRoomManage" component={StorageRoomManage} />
+        <AuthRouter path="/addUser" component={AddUser} />
+        <AuthRouter path="/addWareHouse/:type" component={AddWareHouse} />
+        <AuthRouter path="/addRoom/:type" component={AddRoom} />
+        <AuthRouter path="/operationalTrends" component={OperationalTrends} />
+      </Switch>
+    </HashRouter>
+  </LocaleProvider>,
   document.getElementById("root")
 );
 serviceWorker.unregister();

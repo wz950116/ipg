@@ -10,6 +10,9 @@ class ProductTest extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchLoading: false,
+      confirmLoading: false,
+      goodOrBadLoading: false,
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
       SerialNumber: this.props.location.query && this.props.location.query.sn,
       Memo: "",
@@ -29,6 +32,7 @@ class ProductTest extends Component {
 
   onSearch() {
     const { StorageRoomId, SerialNumber } = this.state
+    this.setState({ searchLoading: true });
     axios
       .get("/stock/GetMoreByHS", {
         params: {
@@ -37,6 +41,7 @@ class ProductTest extends Component {
         }
       })
       .then(res => {
+        this.setState({ searchLoading: false });
         if (res.Code === 0) {
           this.setState({
             HouseCode: res.Data.HouseCode,
@@ -49,6 +54,7 @@ class ProductTest extends Component {
         }
       })
       .catch(error => {
+        this.setState({ searchLoading: false });
         console.log(error);
       });
   };
@@ -59,6 +65,7 @@ class ProductTest extends Component {
       message.error('请输入序列号');
       return;
     }
+    this.setState({ confirmLoading: true });
     axios
       .post("/stock/TransferToWC", {
         StorageRoomId,
@@ -66,6 +73,7 @@ class ProductTest extends Component {
         Memo
       })
       .then(res => {
+        this.setState({ confirmLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg);
           this.setState({
@@ -77,6 +85,7 @@ class ProductTest extends Component {
         }
       })
       .catch(error => {
+        this.setState({ confirmLoading: false });
         console.log(error);
       });
   };
@@ -88,6 +97,7 @@ class ProductTest extends Component {
       message.error('请输入序列号');
       return;
     }
+    this.setState({ goodOrBadLoading: true });
     axios
       .post("stock/UpdateProductStateBySN", {
         StorageRoomId,
@@ -96,6 +106,7 @@ class ProductTest extends Component {
         Memo
       })
       .then(res => {
+        this.setState({ goodOrBadLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg);
         } else {
@@ -103,6 +114,7 @@ class ProductTest extends Component {
         }
       })
       .catch(error => {
+        this.setState({ goodOrBadLoading: false });
         console.log(error);
       });
   }
@@ -142,7 +154,7 @@ class ProductTest extends Component {
               />
             </Col>
             <Col span={6}>
-              <Button type="primary" onClick={this.onSearch.bind(this)}>
+              <Button type="primary" loading={state.searchLoading} onClick={this.onSearch.bind(this)}>
                 查询
               </Button>
             </Col>
@@ -161,6 +173,7 @@ class ProductTest extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.confirmLoading}
                 onClick={this.onConfirm}
                 style={{ width: "100%" }}
               >
@@ -170,6 +183,7 @@ class ProductTest extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.goodOrBadLoading}
                 onClick={() => this.onGoodOrBad('1')}
                 style={{ width: "100%" }}
               >
@@ -179,6 +193,7 @@ class ProductTest extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.goodOrBadLoading}
                 onClick={() => this.onGoodOrBad('3')}
                 style={{ width: "100%" }}
               >

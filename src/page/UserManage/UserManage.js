@@ -16,6 +16,7 @@ class UserManage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchLoading: false,
       dialogVisible: false,
       roleId: "",
       name: "",
@@ -71,6 +72,7 @@ class UserManage extends Component {
       page: 1
     }, () => {
       const { name, roleId, page } = this.state
+      this.setState({ searchLoading: true });
       axios
         .get("/user/GetUsers", {
           params: {
@@ -80,6 +82,7 @@ class UserManage extends Component {
           }
         })
         .then(res => {
+          this.setState({ searchLoading: false });
           if (res.Code === 0) {
             this.setState({
               listData: res.Data
@@ -96,6 +99,7 @@ class UserManage extends Component {
           }
         })
         .catch(error => {
+          this.setState({ searchLoading: false });
           console.log(error)
         })
     })
@@ -251,6 +255,7 @@ class UserManage extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.searchLoading}
                 onClick={this.requestData}
                 style={{ width: "100%" }}
               >

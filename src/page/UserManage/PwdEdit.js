@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Modal, Form, Icon, Input, message } from 'antd';
+import { Modal, Form, Icon, Input, message, Button } from 'antd';
 import axios from "axios";
 
 class PwdEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       username: '',
       oldpassword: '',
       newpassword: '',
@@ -29,11 +30,13 @@ class PwdEdit extends Component {
       if (!err) {
         const params = Object.assign({}, values)
         delete params.newpassword2
+        this.setState({ loading: true })
         axios
           .post("/user/ChangePassword", params)
           .then(res => {
             if (res.Code === 0) {
               message.success(res.Msg)
+              this.setState({ loading: false })
               this.setModalVisible(false)
             } else {
               message.error(res.Msg)
@@ -71,14 +74,21 @@ class PwdEdit extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const userName = this.props.data ? this.props.data.UserName : '';
+    const { state } = this
     return (
       <div>
         <Modal
           title="修改密码"
           centered
           visible={this.props.isShow}
-          onOk={() => this.handleSubmit()}
-          onCancel={() => this.setModalVisible(false)}
+          footer={[
+            <Button key="back" onClick={() => this.setModalVisible(false)}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" loading={state.loading} onClick={() => this.handleSubmit()}>
+              确定
+            </Button>
+          ]}
         >
           <Form className="login-form">
             <Form.Item hasFeedback>

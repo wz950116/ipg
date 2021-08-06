@@ -16,6 +16,7 @@ class InStock extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       storageRoomList: [],
       StorageRoomId: sessionStorage.getItem("StorageRoomId"),
       SerialNumber: this.props.location.query ? this.props.location.query.sn : '',
@@ -66,6 +67,7 @@ class InStock extends Component {
           ArrivalDate,
           Memo
         } = formData;
+        this.setState({ loading: true });
         axios
           .post("/stock/EntryHouse", {
             StorageRoomId,
@@ -77,6 +79,7 @@ class InStock extends Component {
             Memo
           })
           .then(res => {
+            this.setState({ loading: false });
             if (res.Code === 0) {
               // 成功后清空数据
               this.props.form.resetFields();
@@ -90,6 +93,7 @@ class InStock extends Component {
             }
           })
           .catch(error => {
+            this.setState({ loading: false });
             console.log(error);
           });
       }
@@ -243,6 +247,7 @@ class InStock extends Component {
           <Form.Item {...formTailLayout}>
             <Button
               type="primary"
+              loading={state.loading}
               onClick={this.onConfirm}
               style={{ width: "100%" }}
             >

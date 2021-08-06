@@ -15,6 +15,8 @@ class WarehouseManage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      exportLoading: false,
+      searchLoading: false,
       storageRoomId: sessionStorage.getItem('StorageRoomId'),
       houseCode: "",
       isNull: "-1",
@@ -49,6 +51,7 @@ class WarehouseManage extends Component {
       page: 1
     }, () => {
       const { storageRoomId, houseCode, isNull, page } = this.state
+      this.setState({ searchLoading: true });
       axios
         .get("/Stock/GetStorehouse", {
           params: {
@@ -59,6 +62,7 @@ class WarehouseManage extends Component {
           }
         })
         .then(res => {
+          this.setState({ searchLoading: false });
           if (res.Code === 0) {
             this.setState({
               listData: res.Data
@@ -75,6 +79,7 @@ class WarehouseManage extends Component {
           }
         })
         .catch(error => {
+          this.setState({ searchLoading: false });
           console.log(error)
         })
     })
@@ -180,6 +185,7 @@ class WarehouseManage extends Component {
   // 导出excel
   handleExport = () => {
     const { storageRoomId, houseCode, isNull } = this.state
+    this.setState({ exportLoading: true });
     axios
       .get("/stock/ExportStorehouse", {
         params: {
@@ -189,6 +195,7 @@ class WarehouseManage extends Component {
         }
       })
       .then(res => {
+        this.setState({ exportLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg)
           window.open(`http://47.244.175.166:8088/file/excel/${res.Data}`)
@@ -197,6 +204,7 @@ class WarehouseManage extends Component {
         }
       })
       .catch(error => {
+        this.setState({ exportLoading: false });
         console.log(error)
       })
   };
@@ -262,6 +270,7 @@ class WarehouseManage extends Component {
             <Col span={12}>
               <Button
                 type="primary"
+                loading={state.exportLoading}
                 onClick={this.handleExport}
                 style={{ width: "100%" }}
               >
@@ -271,6 +280,7 @@ class WarehouseManage extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.searchLoading}
                 onClick={this.requestData}
                 style={{ width: "100%" }}
               >

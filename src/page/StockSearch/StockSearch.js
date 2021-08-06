@@ -16,6 +16,8 @@ class StockSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      exportLoading: false,
+      searchLoading: false,
       listData: [],
       storageRoomList: [],
       storageRoomId: sessionStorage.getItem('StorageRoomId'),
@@ -55,6 +57,7 @@ class StockSearch extends Component {
       page: 1
     }, () => {
       const { storageRoomId, state, houseCode, serialNumber, model, memo, page } = this.state
+      this.setState({ searchLoading: true });
       axios
         .get("/stock/GetProducts", {
           params: {
@@ -68,6 +71,7 @@ class StockSearch extends Component {
           }
         })
         .then(res => {
+          this.setState({ searchLoading: false });
           if (res.Code === 0) {
             this.setState({
               listData: res.Data
@@ -84,6 +88,7 @@ class StockSearch extends Component {
           }
         })
         .catch(error => {
+          this.setState({ searchLoading: false });
           console.log(error)
         })
     })
@@ -154,6 +159,7 @@ class StockSearch extends Component {
   // 导出excel
   handleExport = () => {
     const { storageRoomId, state, houseCode, serialNumber, model, memo } = this.state
+    this.setState({ exportLoading: true });
     axios
       .get("/stock/ExportProducts", {
         params: {
@@ -166,6 +172,7 @@ class StockSearch extends Component {
         }
       })
       .then(res => {
+        this.setState({ exportLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg)
           window.open(`http://47.244.175.166:8088/file/excel/${res.Data}`)
@@ -174,6 +181,7 @@ class StockSearch extends Component {
         }
       })
       .catch(error => {
+        this.setState({ exportLoading: false });
         console.log(error)
       })
   };
@@ -334,6 +342,7 @@ class StockSearch extends Component {
             <Col span={12}>
               <Button
                 type="primary"
+                loading={state.exportLoading}
                 onClick={this.handleExport}
                 style={{ width: "100%" }}
               >
@@ -351,6 +360,7 @@ class StockSearch extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.searchLoading}
                 onClick={this.requestData}
                 style={{ width: "100%" }}
               >

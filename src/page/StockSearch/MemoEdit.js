@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Modal, Form, Input, message } from 'antd';
+import { Modal, Form, Input, message, Button } from 'antd';
 import axios from "axios";
 
 const { TextArea } = Input;
@@ -9,6 +9,7 @@ class MemoEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       ProductId: this.props.data.ProductId,
       Memo: this.props.data.Memo
     };
@@ -31,6 +32,7 @@ class MemoEdit extends Component {
 
   handleSubmit() {
     const { ProductId, Memo } = this.state
+    this.setState({ loading: true })
     axios
       .post("/stock/UpdateProductMemo", {
         ProductId,
@@ -39,6 +41,7 @@ class MemoEdit extends Component {
       .then(res => {
         if (res.Code === 0) {
           message.success(res.Msg)
+          this.setState({ loading: false })
           this.setModalVisible(true)
         } else {
           message.error(res.Msg)
@@ -58,8 +61,14 @@ class MemoEdit extends Component {
           title="修改备注"
           centered
           visible={true}
-          onOk={() => this.handleSubmit()}
-          onCancel={() => this.setModalVisible()}
+          footer={[
+            <Button key="back" onClick={() => this.setModalVisible()}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" loading={state.loading} onClick={() => this.handleSubmit()}>
+              确定
+            </Button>
+          ]}
         >
           <div className='content'>
             <div className="title">{item.Title}</div>

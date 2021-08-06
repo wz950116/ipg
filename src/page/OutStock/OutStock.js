@@ -10,6 +10,8 @@ class OutStock extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchLoading: false,
+      outStockLoading: false,
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
       SerialNumber: this.props.location.query && this.props.location.query.sn,
       Memo: "",
@@ -22,28 +24,31 @@ class OutStock extends Component {
 
   onSearch() {
     const { StorageRoomId, SerialNumber } = this.state
-      axios
-        .get("/stock/GetMoreByHS", {
-          params: {
-            StorageRoomId,
-            SerialNumber
-          }
-        })
-        .then(res => {
-          if (res.Code === 0) {
-            this.setState({
-              HouseCode: res.Data.HouseCode,
-              Model: res.Data.Model,
-              State: res.Data.State,
-              UpdateDate: res.Data.UpdateDate
-            })
-          } else {
-            message.error(res.Msg);
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    this.setState({ searchLoading: true });
+    axios
+      .get("/stock/GetMoreByHS", {
+        params: {
+          StorageRoomId,
+          SerialNumber
+        }
+      })
+      .then(res => {
+        this.setState({ searchLoading: false });
+        if (res.Code === 0) {
+          this.setState({
+            HouseCode: res.Data.HouseCode,
+            Model: res.Data.Model,
+            State: res.Data.State,
+            UpdateDate: res.Data.UpdateDate
+          })
+        } else {
+          message.error(res.Msg);
+        }
+      })
+      .catch(error => {
+        this.setState({ searchLoading: false });
+        console.log(error);
+      });
   };
 
   // 输入框改变
@@ -65,6 +70,7 @@ class OutStock extends Component {
       message.error('请输入序列号');
       return;
     }
+    this.setState({ outStockLoading: true });
     axios
       .post("/stock/OutHouse", {
         StorageRoomId,
@@ -72,6 +78,7 @@ class OutStock extends Component {
         Memo
       })
       .then(res => {
+        this.setState({ outStockLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg);
           this.props.history.push('/stockSearch');
@@ -80,6 +87,7 @@ class OutStock extends Component {
         }
       })
       .catch(error => {
+        this.setState({ outStockLoading: false });
         console.log(error);
       });
   };
@@ -119,7 +127,7 @@ class OutStock extends Component {
               />
             </Col>
             <Col span={6}>
-              <Button type="primary" onClick={this.onSearch.bind(this)}>
+              <Button type="primary" loading={state.searchLoading} onClick={this.onSearch.bind(this)}>
                 查询
               </Button>
             </Col>
@@ -138,6 +146,7 @@ class OutStock extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.outStockLoading}
                 onClick={this.onConfirm}
                 style={{ width: "100%" }}
               >

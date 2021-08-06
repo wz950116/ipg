@@ -10,6 +10,7 @@ class AddRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       type: this.props.location.query ? this.props.location.query.type : "",
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
       ShelveId: this.props.location.query ? this.props.location.query.ShelveId : "",
@@ -53,6 +54,7 @@ class AddRoom extends Component {
     this.props.form.validateFields((err, formData) => {
       if (!err) {
         const { StorageRoomId, Name, Position } = formData
+        this.setState({ loading: true });
         if (type === "add") {
           axios
             .post("/stock/AddShelves", {
@@ -61,14 +63,16 @@ class AddRoom extends Component {
               Position
             })
             .then(res => {
+              this.setState({ loading: false });
               if (res.Code === 0) {
                 message.success(res.Msg);
-                this.props.history.push('/storageRoomManage')
+                this.props.history.push('/storageRoomManage');
               } else {
                 message.error(res.Msg);
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log(error);
             });
         } else if (type === "update") {
@@ -79,14 +83,16 @@ class AddRoom extends Component {
               Position
             })
             .then(res => {
+              this.setState({ loading: false });
               if (res.Code === 0) {
-                this.props.history.push('/storageRoomManage')
                 message.success(res.Msg);
+                this.props.history.push('/storageRoomManage');
               } else {
                 message.error(res.Msg);
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log(error);
             });
         }
@@ -95,7 +101,7 @@ class AddRoom extends Component {
   };
 
   render() {
-    const { type, storageRoomList, StorageRoomId, Name, Position } = this.state;
+    const { type, storageRoomList, StorageRoomId, Name, Position, loading } = this.state;
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -149,7 +155,7 @@ class AddRoom extends Component {
             )}
           </Form.Item>
           <Form.Item {...formTailLayout}>
-            <Button type="primary" onClick={this.check} style={{width: '100%'}}>
+            <Button type="primary" loading={loading} onClick={this.check} style={{width: '100%'}}>
               {type === "add" ? "新建" : "编辑"}
             </Button>
           </Form.Item>

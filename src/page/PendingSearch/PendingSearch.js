@@ -16,6 +16,7 @@ class PendingSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchLoading: false,
       listData: [],
       storageRoomList: [],
       storageRoomId: sessionStorage.getItem('StorageRoomId'),
@@ -54,6 +55,7 @@ class PendingSearch extends Component {
       page: 1
     }, () => {
       const { storageRoomId, state, serialNumber, model, memo, page } = this.state
+      this.setState({ searchLoading: true });
       axios
         .get("/Stock/GetWatiCheck", {
           params: {
@@ -66,6 +68,7 @@ class PendingSearch extends Component {
           }
         })
         .then(res => {
+          this.setState({ searchLoading: false });
           if (res.Code === 0) {
             this.setState({
               listData: res.Data
@@ -82,6 +85,7 @@ class PendingSearch extends Component {
           }
         })
         .catch(error => {
+          this.setState({ searchLoading: false });
           console.log(error)
         })
     })
@@ -351,6 +355,7 @@ class PendingSearch extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.searchLoading}
                 onClick={this.requestData}
                 style={{ width: "100%" }}
               >

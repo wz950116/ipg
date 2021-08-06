@@ -1,87 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
 
-    <link rel="stylesheet" href="./css/common.css" type="text/css" charset="utf-8" />
-    <script type="text/javascript" src="./js/common.js"></script>
-    
-    <script>
-      if ('addEventListener' in document) {
-        document.addEventListener('DOMContentLoaded', function() {
-          FastClick.attach(document.body);
-        }, false);
-      }
-      if(!window.Promise) {
-        document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
-      }
-    </script>
-    <title>IPG</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-  
+<head>
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+
+  <link rel="stylesheet" href="./css/common.css" type="text/css" charset="utf-8" />
+  <script type="text/javascript" src="./js/common.js"></script>
 
   <script>
-    //系统栏颜色
-    if(window.plus){
-      plus.navigator.setStatusBarBackground("#009DE2");
-    }else{
-      document.addEventListener("plusready",function(){
-        plus.navigator.setStatusBarBackground("#009DE2");
-      },false);
+    if ('addEventListener' in document) {
+      document.addEventListener('DOMContentLoaded', function () {
+        FastClick.attach(document.body);
+      }, false);
     }
-    
-    // 打开自定义扫描界面 
-    function openBarcodeCustom(callback) {
-      sessionStorage.setItem('scanRefresh', '0')
-      createWithoutTitle('scan.html', {
-        titleNView: {
-          type: 'float',
-          backgroundColor: '#009DE2',
-          titleText: '扫一扫',
-          titleColor: '#FFFFFF',
-          autoBackButton: true
-        }
-      }, callback);
+    if (!window.Promise) {
+      document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"' + '>' + '<' + '/' + 'script>');
     }
-    
-    // 扫描成功后回调
-    function scaned(t, r, f){
-      sessionStorage.setItem('scanData', r)
-      sessionStorage.setItem('scanRefresh', '1')
-    }
-
-    (function(doc, win) {
-      var prem = 32; //fontSize
-      var pwidth = 750; //设计稿宽度
-      var docEl = doc.documentElement,
-        resizeEvt =
-          "orientationchange" in window ? "orientationchange" : "resize",
-        recalc = function() {
-          var clientWidth = docEl.clientWidth;
-          if (!clientWidth) return;
-          if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
-            docEl.style.fontSize = prem * (clientWidth / pwidth) + "px";
-          } else {
-            docEl.style.fontSize = "16px";
-          }
-        };
-      if (!doc.addEventListener) return;
-      win.addEventListener(resizeEvt, recalc, false);
-      doc.addEventListener("DOMContentLoaded", recalc, false);
-
-      // 初始化plus
-      document.addEventListener('plusready', function(){
-        console.log('plusready');
-      });
-    })(document, window);
   </script>
+  <title>IPG</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+</body>
+
+
+<script>
+  // 系统栏颜色
+  if (window.plus) {
+    plus.navigator.setStatusBarBackground("#009DE2");
+  } else {
+    document.addEventListener("plusready", function () {
+      plus.navigator.setStatusBarBackground("#009DE2");
+    }, false);
+  }
+
+  // 打开自定义扫描界面 
+  function openBarcodeCustom(callback, codeType) {
+    sessionStorage.setItem('scanRefresh', '0')
+    createWithoutTitle('scan.html', {
+      titleNView: {
+        type: 'float',
+        backgroundColor: '#009DE2',
+        titleText: '扫一扫',
+        titleColor: '#FFFFFF',
+        autoBackButton: true
+      }
+    }, callback);
+  }
+
+  // 扫描成功后回调
+  function scaned(t, r, f) {
+    sessionStorage.setItem('scanData', r)
+    sessionStorage.setItem('scanRefresh', '1')
+  }
+
+  (function (doc, win) {
+    var prem = 32; //fontSize
+    var pwidth = 750; //设计稿宽度
+    var docEl = doc.documentElement,
+      resizeEvt =
+        "orientationchange" in window ? "orientationchange" : "resize",
+      recalc = function () {
+        var clientWidth = docEl.clientWidth;
+        if (!clientWidth) return;
+        if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
+          docEl.style.fontSize = prem * (clientWidth / pwidth) + "px";
+        } else {
+          docEl.style.fontSize = "16px";
+        }
+      };
+    if (!doc.addEventListener) return;
+    win.addEventListener(resizeEvt, recalc, false);
+    doc.addEventListener("DOMContentLoaded", recalc, false);
+
+    // 初始化plus
+    document.addEventListener('plusready', function () {
+      console.log('plusready');
+    });
+  })(document, window);
+</script>
+
 </html>

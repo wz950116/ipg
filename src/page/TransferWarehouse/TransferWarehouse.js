@@ -11,6 +11,8 @@ class TransferWarehouse extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchLoading: false,
+      confirmLoading: false,
       storageRoomList: [],
       StorageRoomId: sessionStorage.getItem('StorageRoomId'),
       NewStorageRoomId: this.props.location.query && this.props.location.query.NewStorageRoomId ? this.props.location.query.NewStorageRoomId : sessionStorage.getItem('StorageRoomId'),
@@ -67,6 +69,7 @@ class TransferWarehouse extends Component {
       message.error('请输入序列号');
       return;
     }
+    this.setState({ searchLoading: true });
     axios
       .get("/stock/GetMoreByHS", {
         params: {
@@ -75,6 +78,7 @@ class TransferWarehouse extends Component {
         }
       })
       .then(res => {
+        this.setState({ searchLoading: false });
         if (res.Code === 0) {
           this.setState({
             Model: res.Data.Model,
@@ -91,6 +95,7 @@ class TransferWarehouse extends Component {
         }
       })
       .catch(error => {
+        this.setState({ searchLoading: false });
         console.log(error);
       });
   };
@@ -112,6 +117,7 @@ class TransferWarehouse extends Component {
       message.error('请输入新库位');
       return;
     }
+    this.setState({ confirmLoading: true });
     axios
       .post("/stock/UpperShelf", {
         StorageRoomId,
@@ -121,6 +127,7 @@ class TransferWarehouse extends Component {
         Memo
       })
       .then(res => {
+        this.setState({ confirmLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg);
         } else {
@@ -128,6 +135,7 @@ class TransferWarehouse extends Component {
         }
       })
       .catch(error => {
+        this.setState({ confirmLoading: false });
         console.log(error);
       });
   };
@@ -173,7 +181,7 @@ class TransferWarehouse extends Component {
               />
             </Col>
             <Col span={6}>
-              <Button type="primary" onClick={this.onSearch.bind(this)}>
+              <Button type="primary" loading={state.searchLoading} onClick={this.onSearch.bind(this)}>
                 查询
               </Button>
             </Col>
@@ -224,6 +232,7 @@ class TransferWarehouse extends Component {
             <Col span={24}>
               <Button
                 type="primary"
+                loading={state.confirmLoading}
                 onClick={this.onConfirm}
                 style={{ width: "100%" }}
               >
