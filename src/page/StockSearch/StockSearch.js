@@ -277,7 +277,7 @@ class StockSearch extends Component {
       <div className='stock_search'>
         {
           state.dialogVisible ? 
-          <MemoEdit data={state.currentRow} changeVisible={this.changeVisible.bind(this)}></MemoEdit>
+          <MemoEdit data={state.currentRow} visible={state.dialogVisible} changeVisible={this.changeVisible.bind(this)}></MemoEdit>
           :
           null
         }

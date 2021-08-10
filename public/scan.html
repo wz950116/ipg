@@ -35,7 +35,7 @@
       nv = ws.getTitleNView();
       // 开始扫描
       ws.addEventListener('show', function () {
-        scan = new plus.barcode.Barcode('bcid', [plus.barcode.QR, plus.barcode.EAN8, plus.barcode.EAN13, plus.barcode.CODE39], {
+        scan = new plus.barcode.Barcode('bcid', [plus.barcode.QR, plus.barcode.EAN13, plus.barcode.EAN8, plus.barcode.DATAMATRIX, plus.barcode.CODE39], {
           frameColor: '#009DE2',
           scanbarColor: '#009DE2',
         });
@@ -62,6 +62,9 @@
           break;
         case plus.barcode.EAN8:
           type = 'EAN8';
+          break;
+        case plus.barcode.DATAMATRIX:
+          type = 'DATAMATRIX';
           break;
         case plus.barcode.CODE39:
           type = 'CODE39';

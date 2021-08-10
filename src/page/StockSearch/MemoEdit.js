@@ -60,7 +60,8 @@ class MemoEdit extends Component {
         <Modal
           title="修改备注"
           centered
-          visible={true}
+          visible={this.props.visible}
+          onCancel={() => this.setModalVisible()}
           footer={[
             <Button key="back" onClick={() => this.setModalVisible()}>
               取消

@@ -81,7 +81,7 @@ class OutStock extends Component {
         this.setState({ outStockLoading: false });
         if (res.Code === 0) {
           message.success(res.Msg);
-          this.props.history.push('/stockSearch');
+          this.props.history.push('/kanban');
         } else {
           message.error(res.Msg);
         }

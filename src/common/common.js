@@ -7,7 +7,7 @@ const common = {
   // 校验邮箱
   validateEmail(email) {
     let emails = email.replace(/^\s+|\s+$/g, "");
-    return /^[\w\-\+]+(\.[\w\-\+]+)*@(\w-?)+(\.\w{2,})+$/.test(emails);
+    return /^[\w\-+]+(\.[\w\-+]+)*@(\w-?)+(\.\w{2,})+$/.test(emails);
   },
 
   // 限制只能输入数字和-
@@ -17,7 +17,7 @@ const common = {
 
   // 限制只能输入数字字母
   EmailFormat(value) {
-    return value.replace(/[^\w\-\+\./@_-]/gi, "");
+    return value.replace(/[^\w]|_/gi, "");
   },
 
   // 时间对象转换成字符串

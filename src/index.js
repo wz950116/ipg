@@ -31,8 +31,8 @@ import zh_CN from 'antd/lib/locale-provider/zh_CN'
 import { LocaleProvider } from 'antd'
 
 /** debug */
-import VConsole from 'vconsole'
-new VConsole()
+// import VConsole from 'vconsole'
+// new VConsole()
 
 // let equip = ''
 // if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {

@@ -81,6 +81,7 @@ class PwdEdit extends Component {
           title="修改密码"
           centered
           visible={this.props.isShow}
+          onCancel={() => this.setModalVisible(false)}
           footer={[
             <Button key="back" onClick={() => this.setModalVisible(false)}>
               取消
